@@ -1,8 +1,15 @@
-org 0x7c00
+org 0
 bits 16
 
 
 start:
+    cli
+    mov ax, 0x7c0
+    mov ds, ax
+    mov es, ax
+    mov ax, 0x00
+    mov ss, ax
+    sti
     mov si, message
     call print
     jmp $
