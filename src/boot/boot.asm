@@ -33,7 +33,6 @@ step2:
     mov cr0, eax
     jmp CODE_SEG:load32
 
-
 gdt_start:
 
 
@@ -65,18 +64,14 @@ gdt_descriptor:
     dw gdt_end - gdt_start - 1
     dd gdt_start
 
+[BITS 32]
+load32:
+    mov eax, 1
+    mov ecx, 100
+    mov edi, 0x0100000
+    call read_ata
 
-[BITS 32] ; Todo el codigo debajo será 32 bits.
-load32: 
-    mov ax, DATA_SEG
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
-    mov ebp, 0x00200000
-    mov esp, ebp
-    jmp $
+    
 
 times 510-($-$$) db 0
 dw 0xAA55
