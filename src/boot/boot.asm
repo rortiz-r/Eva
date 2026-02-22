@@ -35,7 +35,6 @@ step2:
 
 gdt_start:
 
-
 gdt_null:
     dd 0x0
     dd 0x0
@@ -70,7 +69,60 @@ load32:
     mov ecx, 100
     mov edi, 0x0100000
     call read_ata
+    jmp CODE_SEG:0x0100000
 
+
+read_ata:
+    mov ebx, eax ; Backup the LBA
+    shr eax, 24 ; 32-24 shift eax register 24 bits eax will contain highest 8 bits of the lba
+    or eax, 0xE0
+    mov dx, 0x1F6
+    out dx, al
+
+    ; Send the total sectors to the hard disk controller
+    mov eax, ecx
+    mov dx, 0x1F2
+    out dx, al
+
+    mov eax, ebx
+    mov dx, 0x1F3
+    out dx, al
+
+    ; Send more bits of the LBA
+    mov dx, 0x1F4
+    mov eax, ebx
+    shr eax, 8
+    out dx, al
+    
+    ; Send upper 16 bits of the LBA
+
+    mov dx, 0x1F5
+    mov eax, ebx
+    shr eax, 16
+    out dx, al
+
+
+    mov dx, 0x1f7
+    mov al, 0x20
+    out dx, al
+
+.next_sector:
+    push ecx
+
+.try_again:
+    mov dx, 0x1f7
+    in al, dx
+    test al, 8
+    jz .try_again
+
+
+    mov ecx, 256
+    mov dx, 0x1f0
+    rep insw
+    pop ecx
+    loop .next_sector
+
+    ret
     
 
 times 510-($-$$) db 0

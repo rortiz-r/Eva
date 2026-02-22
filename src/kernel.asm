@@ -1,11 +1,11 @@
-[BITS 32] ; Todo el codigo debajo será 32 bits.
+[BITS 32] 
 
 global _start
 
 CODE_SEG equ 0x08
 DATA_SEG equ 0x10
 
-_start : 
+_start: 
     mov ax, DATA_SEG
     mov ds, ax
     mov es, ax
@@ -15,7 +15,7 @@ _start :
     mov ebp, 0x00200000
     mov esp, ebp
 
-    ; Activating the A20 Line.
+    ; A20 Line.
     in al, 0x92
     or al, 2
     out 0x92, al
