@@ -20,3 +20,5 @@ clean:
 	rm -rf ./bin/boot.bin
 	rm -rf ./bin/os.bin
 	rm -rf ./bin/kernel.bin
+	rm -rf ./build/kernel_full.o
+	rm -rf ${FILES}
